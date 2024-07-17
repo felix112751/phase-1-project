@@ -1,64 +1,53 @@
-
-const addBtn = document.getElementById('add')
-
-const notes = JSON.parse(localStorage.getItem('notes'))
-
-if(notes) {
-    notes.forEach(note => addNewNote(note))
-}
-
-addBtn.addEventListener('click', () => addNewNote())
-
-function addNewNote(text = '') {
-    const note = document.createElement('div')
-    note.classList.add('note')
-
-    note.innerHTML = `
-    <div class="tools">
-        <button class="edit"><i class="fas fa-edit"></i></button>
-        <button class="delete"><i class="fas fa-trash-alt"></i></button>
-    </div>
-
-    <div class="main ${text ? "" : "hidden"}"></div>
-    <textarea class="${text ? "hidden" : ""}"></textarea>
-    `
-
-    const editBtn = note.querySelector('.edit')
-    const deleteBtn = note.querySelector('.delete')
-    const main = note.querySelector('.main')
-    const textArea = note.querySelector('textarea')
-
-    textArea.value = text
-    main.innerHTML = marked(text)
-
-    deleteBtn.addEventListener('click', () => {
-        note.remove()
-
-        updateLS()
-    })
-
-    editBtn.addEventListener('click', () => {
-        main.classList.toggle('hidden')
-        textArea.classList.toggle('hidden')
-    })
-
-    textArea.addEventListener('input', (e) => {
-        const { value } = e.target
-
-        main.innerHTML = marked(value)
-
-        updateLS()
-    })
-
-    document.body.appendChild(note)
-}
-
-function updateLS() {
-    const notesText = document.querySelectorAll('textarea')
-
-    const notes = []
-
-    notesText.forEach(note => notes.push(note.value))
-
-    localStorage.setItem('notes', JSON.stringify(notes))
-}
+document.addEventListener('DOMContentLoaded', function () {
+    // DOM Elements
+    const searchButton = document.querySelector('.search button');
+    const searchInput = document.querySelector('.search input');
+    const cityTitle = document.querySelector('.city');
+    const tempElement = document.querySelector('.temp');
+    const descriptionElement = document.querySelector('.description');
+    const humidityElement = document.querySelector('.humidity');
+    const windElement = document.querySelector('.wind');
+    const uvIndexElement = document.querySelector('.Uv.index');
+    const iconElement = document.querySelector('.icon');
+  
+    // Event listener for search button click
+    searchButton.addEventListener('click', function () {
+      const searchQuery = searchInput.value.trim();
+      if (searchQuery !== '') {
+        getWeatherData(searchQuery);
+      } else {
+        alert('Please enter a valid city name');
+      }
+    });
+  
+    // Fetchs weather data from JSON
+    async function getWeatherData(city) {
+      try {
+        const response = await fetch('db.json');
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        const cityData = data.counties.find(item => item.county.toLowerCase() === city.toLowerCase());
+        if (!cityData) throw new Error('City not found');
+        updateWeatherUI(cityData);
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+        alert('City not found. Please try again.');
+      }
+    }
+  
+    // Updates UI with weather data
+    function updateWeatherUI(data) {
+      cityTitle.textContent = `Weather in ${data.county}`;
+      tempElement.textContent = `${data.temp}°C`;
+      descriptionElement.textContent = data.description;
+      humidityElement.textContent = `Humidity: ${data.humidity}%`;
+      windElement.textContent = `Wind speed: ${data.wind}`;
+      uvIndexElement.textContent = `UV Index: ${data['Uv index']}`;
+      // Assuming the weather API provides an icon code, uses it to fetch the icon image
+      const iconUrl = `https://openweathermap.org/img/wn/${data.icon}.png`;
+      iconElement.src = iconUrl;
+  
+      // Updates title attributes for icons (if needed)
+      iconElement.title = `Weather Icon: ${data.description}`;
+    }
+  });
