@@ -71,9 +71,14 @@ body{
   }
 
   .expla {
-font-style: italic;
+font-style:oblique
 margin-bottom: 3rem;
-
+font-weight: 500;
 
   }
+.note {
+  font-style: italic;
+  font-size: smaller;
+
+}
   

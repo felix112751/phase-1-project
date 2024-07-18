@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+
     // DOM Elements
     const searchButton = document.querySelector('.search button');
     const searchInput = document.querySelector('.search input');
@@ -50,4 +50,3 @@ document.addEventListener('DOMContentLoaded', function () {
       // Updates title attributes for icons (if needed)
       iconElement.title = `Weather Icon: ${data.description}`;
     }
-  });
