@@ -18,7 +18,7 @@ body{
   
   
   .container{
-    background: darkslategrey;
+    background: blue;
     padding: 4em;
     border-radius: 30px;
     width: 100%;
@@ -81,4 +81,3 @@ font-weight: 500;
   font-size: smaller;
 
 }
-  

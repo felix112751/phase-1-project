@@ -29,7 +29,8 @@
         const cityData = data.counties.find(item => item.county.toLowerCase() === city.toLowerCase());
         if (!cityData) throw new Error('City not found');
         updateWeatherUI(cityData);
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error fetching weather data:', error);
         alert('City not found. Please try again.');
       }
